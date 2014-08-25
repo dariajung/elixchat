@@ -1,4 +1,0 @@
-Elixchat
-========
-
-** TODO: Add description **

@@ -1,0 +1,2 @@
+_build/dev/lib/elixchat/ebin/Elixir.Elixchat.beam	Elixir.Elixchat	lib/elixchat.ex	Elixir
+_build/dev/lib/elixchat/ebin/Elixir.ElixChat.Supervisor.beam	Elixir.ElixChat.Supervisor	lib/elixchat/supervisor.ex	Elixir.ElixChat.Server	Elixir.Kernel	Elixir.Module	Elixir.Supervisor	Elixir.Supervisor.Spec	Elixir
