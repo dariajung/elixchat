@@ -1,0 +1,2 @@
+defmodule Elixchat do
+end
