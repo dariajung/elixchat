@@ -1,15 +1,15 @@
-defmodule ElixChat.Supervisor do 
+defmodule Elixchat.Supervisor do 
     use Supervisor
 
-    def init([]) do
+    def init(_opt) do
         children = [
-            worker(ElixChat.Server, [[]])
+            worker(Elixchat.Server, [[name: :message_server]])
         ]
         supervise(children, strategy: :one_for_one)
     end
 
     def start_link do
-        Supervisor.start_link(__MODULE__, :ok)
+        Supervisor.start_link(__MODULE__, [])
     end
 
 end
