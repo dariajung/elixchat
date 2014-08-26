@@ -32,9 +32,15 @@ defmodule Elixclient do
         Usage:
             mix run -e "Elixclient.main" -- -s <server> [-u <username>]
 
+        Example:
+            mix run --sname bar -e "Elixclient.main" -- -s foo@Caturday
+
         Options:
-            -s, --server: longname for server
+            -s, --server: shortname for server on local network
             -u, --username: username (an optional argument)
+
+        Example:
+            mix run --sname bar -e "Elixclient.main" -- -s foo@Caturday -u daria
 
         Options:
             -h, --help: Shows this usage information and quits.
@@ -42,10 +48,37 @@ defmodule Elixclient do
     end
 
     def process_action([server]) do
-        IO.puts("got server")
+        IO.puts("got server, need username")
+        process_action([nil, server])
     end
 
-    def process_action([username, server]) do 
+    def process_action([username, server]) do
+        server = case server do 
+            nil -> IO.gets("Please enter server to connect to: \n")
+            s   -> s 
+        end
+        server = String.to_atom(String.rstrip(server))
+        IO.puts("#{inspect self()}")
+
+        IO.puts("Connecting to #{inspect server}\n")
+        case Node.connect(server) do 
+            true -> :ok
+            no   ->     
+                IO.puts "Could not connect to server, reason: #{inspect no}"
+                System.halt()
+        end
+
+        Elixclient.MessageHandler.start_link(server)
+
+        #connect to server first
+        username = case username do 
+            nil -> IO.gets("Please enter username: \n")
+            u   -> u 
+        end
+
+        username = String.rstrip(username)
+
+        IO.puts("#{inspect username}")
     end
 end
 
