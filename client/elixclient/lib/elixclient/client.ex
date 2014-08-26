@@ -1,9 +1,27 @@
-defmodule ElixClient do
-    def connect() do 
+defmodule Elixclient do
+    def main(args \\ System.argv) do 
+        IO.puts("#{inspect args}")
+        IO.puts("hello\n")
+    end
+
+    def parse_options(argv) do 
+        switches = [
+            help: :boolean,
+            username: :string,
+            server: :string
+        ]
+
+        aliases = [
+            h: :help,
+            u: :username,
+            s: :server
+        ]
+
+        opts = OptionParser.parse(argv, switches: switches, aliases: aliases)
     end
 end
 
-defmodule ElixClient.MessageHandler do 
+defmodule Elixclient.MessageHandler do 
     use GenServer
 
     def start_link(server) do 

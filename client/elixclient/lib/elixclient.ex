@@ -1,2 +1,0 @@
-defmodule Elixclient do
-end
