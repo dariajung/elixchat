@@ -1,7 +1,6 @@
 defmodule Elixclient do
     def main(args \\ System.argv) do 
-        IO.puts("#{inspect args}")
-        IO.puts("hello\n")
+        args |> parse_options |> process_action
     end
 
     def parse_options(argv) do 
@@ -18,6 +17,35 @@ defmodule Elixclient do
         ]
 
         opts = OptionParser.parse(argv, switches: switches, aliases: aliases)
+
+        case opts do 
+            {[help: true], _, _ }                           -> :help
+            {[server: server], _, _}                        -> [server]
+            {[username: username, server: server], _, _}    -> [username, server]
+            {[server: server, username: username], _, _}    -> [username, server]
+            _                                               -> :help
+        end
+    end
+
+    def process_action(:help) do 
+        IO.puts """
+        Usage:
+            mix run -e "Elixclient.main" -- -s <server> [-u <username>]
+
+        Options:
+            -s, --server: longname for server
+            -u, --username: username (an optional argument)
+
+        Options:
+            -h, --help: Shows this usage information and quits.
+        """
+    end
+
+    def process_action([server]) do
+        IO.puts("got server")
+    end
+
+    def process_action([username, server]) do 
     end
 end
 
