@@ -137,15 +137,15 @@ defmodule Elixclient.MessageHandler do
         {:ok, server}
     end
 
-    def handle_call(_, _, server) do
-        {:reply, :error, server}
-    end
+    # def handle_call(_, _, server) do
+    #     {:reply, :error, server}
+    # end
 
-    def handle_cast({:message, user, msg}, server) do 
+    def handle_call({:message, user, msg}, _from, server) do 
         msg = String.rstrip(msg)
         IO.puts("\n#{inspect server} > #{inspect user}: #{inspect msg}")
         IO.puts("\n#{inspect node()} > ")
-        {:noreply, server}
+        {:reply, :ok, server}
     end
 
     def handle_cast(_, server) do 

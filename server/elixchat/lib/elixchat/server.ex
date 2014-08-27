@@ -47,16 +47,16 @@ defmodule Elixchat.Server do
         end
     end
 
-    defp broadcast(listeners, from_user, msg) do 
-        Enum.each(listeners, fn {_name, node} -> GenServer.cast({:message_client, node}, {:message, from_user, msg }) end)
-    end
-
     def handle_cast({:say, user, msg}, users) do
         listeners = HashDict.delete(users, user)
 
         IO.puts("#{inspect user}: #{inspect msg}")
         broadcast(listeners, user, "#{inspect msg}")
         {:noreply, users}
+    end
+
+    defp broadcast(listeners, from_user, msg) do 
+        Enum.each(listeners, fn {_name, node} -> GenServer.call({:message_handler, node}, {:message, from_user, msg }) end)
     end
 
     # no private messages yet
