@@ -6,8 +6,6 @@ A command-line chat system written in the Elixir programming language.
 ####Usage
 ----
 
-Starting the client:
-
 ####Starting the client and examples
 
 ```elixir
