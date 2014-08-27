@@ -1,3 +1,3 @@
-_build/dev/lib/elixchat/ebin/Elixir.Elixchat.beam	Elixir.Elixchat	lib/elixchat.ex	Elixir.Application	Elixir.Elixchat.Supervisor	Elixir.Kernel	Elixir.Module	Elixir
 _build/dev/lib/elixchat/ebin/Elixir.Elixchat.Supervisor.beam	Elixir.Elixchat.Supervisor	lib/elixchat/supervisor.ex	Elixir.Elixchat.Server	Elixir.Kernel	Elixir.Module	Elixir.Supervisor	Elixir.Supervisor.Spec	Elixir
+_build/dev/lib/elixchat/ebin/Elixir.Elixchat.beam	Elixir.Elixchat	lib/elixchat.ex	Elixir.Application	Elixir.Elixchat.Supervisor	Elixir.Kernel	Elixir.Module	Elixir
 _build/dev/lib/elixchat/ebin/Elixir.Elixchat.Server.beam	Elixir.Elixchat.Server	lib/elixchat/server.ex	Elixir.Enum	Elixir.GenServer	Elixir.HashDict	Elixir.IO	Elixir.Kernel	Elixir.Module	Elixir.String.Chars	erlang	Elixir

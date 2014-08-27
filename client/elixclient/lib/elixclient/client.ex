@@ -1,4 +1,6 @@
 defmodule Elixclient do
+    use GenServer
+
     def main(args \\ System.argv) do 
         args |> parse_options |> process_action
     end
@@ -30,17 +32,17 @@ defmodule Elixclient do
     def process_action(:help) do 
         IO.puts """
         Usage:
-            mix run -e "Elixclient.main" -- -s <server> [-u <username>]
+            elixir --sname bar -S mix run -e "Elixclient.main" -- -s <server> [-u <username>]
 
         Example:
-            mix run --sname bar -e "Elixclient.main" -- -s foo@Caturday
+            elixir --sname bar -S mix run -e "Elixclient.main" -- -s foo@Caturday
 
         Options:
             -s, --server: shortname for server on local network
             -u, --username: username (an optional argument)
 
         Example:
-            mix run --sname bar -e "Elixclient.main" -- -s foo@Caturday -u daria
+            elixir --sname bar -S mix run -e "Elixclient.main" -- -s foo@Caturday -u daria
 
         Options:
             -h, --help: Shows this usage information and quits.
@@ -70,7 +72,6 @@ defmodule Elixclient do
 
         Elixclient.MessageHandler.start_link(server)
 
-        #connect to server first
         username = case username do 
             nil -> IO.gets("Please enter username: \n")
             u   -> u 
@@ -78,7 +79,48 @@ defmodule Elixclient do
 
         username = String.rstrip(username)
 
-        IO.puts("#{inspect username}")
+        case GenServer.call({:message_server, server}, {:connect, username}) do 
+            {:ok, users} -> 
+                IO.puts("**Joined the chatroom**")
+                IO.puts("**Users in room: #{inspect users}**")
+                IO.puts("use /help for commands")
+            reason -> 
+                IO.puts("Something went wrong, reason: #{inspect reason}")
+        end
+
+        loop_acceptor(server, username)
+    end
+
+    def loop_acceptor(server, username) do
+        IO.puts("inside loop_acceptor\n") 
+        action = IO.gets("#{inspect self()}> \n")
+        action = String.rstrip(action)
+        handle_action(action, server, username)
+
+        loop_acceptor(server, username)
+    end
+
+    def handle_action(action, server, username) do 
+        case action do 
+            "/help" -> 
+                IO.puts """
+                /quit or /leave to leave the chat
+                /join to connect to chat room
+                or just type to send a message. 
+                """
+            "/quit" -> 
+                GenServer.call({:message_server, server}, {:disconnect, username})
+            "/leave" ->
+                GenServer.call({:message_server, server}, {:disconnect, username})
+            "/join" -> 
+                GenServer.call({:message_server, server}, {:connect, username})
+            "" -> 
+                :ok
+            nil -> 
+                :ok
+            msg -> 
+                GenServer.cast({:message_server, server}, {:say, username, msg})
+        end
     end
 end
 

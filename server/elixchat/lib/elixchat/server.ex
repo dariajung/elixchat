@@ -22,25 +22,26 @@ defmodule Elixchat.Server do
                 current_users = Enum.join(HashDict.keys(new_users), ", ")
                 IO.puts("#{inspect user} has joined, current users: #{inspect current_users}.")
 
-                request = {:say, :server, "#**{inspect user} has joined the chat**"}
+                request = {:say, :server, "**#{inspect user} has joined the chat**"}
                 GenServer.cast(:message_server, request)
                 {:reply, {:ok, current_users}, new_users}
         end
     end
 
     def handle_call({:disconnect, user}, {pid, _}, users) do
-        to_delete = HashDict.get(user, users)
+        to_delete = HashDict.get(users, user)
 
         cond do
             to_delete == nil -> 
                 {:reply, :no_such_user, users}
             to_delete == node(pid) ->
-                new_users = HashDict.delete(user, users)
+                IO.puts("#{inspect user}")
+                new_users = HashDict.delete(users, user)
                 current_users = Enum.join(HashDict.keys(new_users), ", ")
 
                 IO.puts("#{inspect user} has left, current users: #{inspect current_users}.")
 
-                request = {:say, :server, "#**{inspect user} has left the chat**"}
+                request = {:say, :server, "**#{inspect user} has left the chat**"}
                 GenServer.cast(:message_server, request)
                 {:reply, {:ok, current_users}, new_users}
         end
@@ -51,7 +52,7 @@ defmodule Elixchat.Server do
     end
 
     def handle_cast({:say, user, msg}, users) do
-        listeners = HashDict.delete(user, users)
+        listeners = HashDict.delete(users, user)
 
         IO.puts("#{inspect user}: #{inspect msg}")
         broadcast(listeners, user, "#{inspect msg}")
