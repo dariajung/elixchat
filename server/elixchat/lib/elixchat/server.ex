@@ -20,7 +20,7 @@ defmodule Elixchat.Server do
                 # create new node with user
                 new_users = HashDict.put(users, user, node(pid))
                 current_users = Enum.join(HashDict.keys(new_users), ", ")
-                IO.puts("#{inspect user} has joined, current users: #{inspect current_users}.")
+                IO.puts("#{inspect user} has joined\ncurrent users: #{inspect current_users}.")
 
                 request = {:say, :server, "**#{inspect user} has joined the chat**"}
                 GenServer.cast(:message_server, request)

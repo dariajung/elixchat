@@ -92,7 +92,6 @@ defmodule Elixclient do
     end
 
     def loop_acceptor(server, username) do
-        IO.puts("inside loop_acceptor\n") 
         action = IO.gets("#{inspect self()}> \n")
         action = String.rstrip(action)
         handle_action(action, server, username)
@@ -104,9 +103,10 @@ defmodule Elixclient do
         case action do 
             "/help" -> 
                 IO.puts """
-                /quit or /leave to leave the chat
-                /join to connect to chat room
-                or just type to send a message. 
+                \tCommands:
+                \t/quit or /leave to leave the chat
+                \t/join to connect to chat room
+                \tor just type to send a message. 
                 """
             "/quit" -> 
                 GenServer.call({:message_server, server}, {:disconnect, username})
@@ -114,6 +114,8 @@ defmodule Elixclient do
                 GenServer.call({:message_server, server}, {:disconnect, username})
             "/join" -> 
                 GenServer.call({:message_server, server}, {:connect, username})
+            "/whoami" ->
+                IO.puts("#{inspect username}")
             "" -> 
                 :ok
             nil -> 
